@@ -1,0 +1,48 @@
+### Cadastrar novo usuário
+POST http://localhost:3000/api/usuarios/cadastrar
+Content-Type: application/json
+
+{
+  "nome": "joana",
+  "email": "veroniya@email.com",
+  "senha": "minhasenha123"
+}
+
+
+### Fazer Login
+POST http://localhost:3000/api/usuarios/login
+Content-Type: application/json
+
+{
+  "email": "veroniya@email.com",
+  "senha": "minhasenha123"
+}
+
+### Criar nova Disciplina com Cálculo Automático
+POST http://localhost:3000/api/disciplina/criar
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUzZmY3NDhiLThjNGMtNDBjOC05ZjM5LWQxMjg0YWU2NzBmMyIsIm5vbWUiOiJqb2FuYSIsImlhdCI6MTc4ODkwOTQ3NywiZXhwIjoxNzg4OTEzMDc3fQ._Ql2SWl5rXG117aTaoOSw6tAlD3wq9f0AQVbI4DoKWY
+
+{
+  "nomeDisciplina": "circuitos",
+  "totalAulas": 80,
+  "percentualMinimo": 30
+}
+
+### Listar minhas Disciplinas
+GET http://127.0.0.1:3000/api/disciplina/list
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUzZmY3NDhiLThjNGMtNDBjOC05ZjM5LWQxMjg0YWU2NzBmMyIsIm5vbWUiOiJqb2FuYSIsImlhdCI6MTc4ODkwOTQ3NywiZXhwIjoxNzg4OTEzMDc3fQ._Ql2SWl5rXG117aTaoOSw6tAlD3wq9f0AQVbI4DoKWY
+
+### Deletar uma Disciplina
+DELETE http://127.0.0.1:3000/api/disciplina/apagarDisciplina/3cf56cd2-4369-4824-a332-e7a4a67ccef4
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUzZmY3NDhiLThjNGMtNDBjOC05ZjM5LWQxMjg0YWU2NzBmMyIsIm5vbWUiOiJqb2FuYSIsImlhdCI6MTc4ODkwOTQ3NywiZXhwIjoxNzg4OTEzMDc3fQ._Ql2SWl5rXG117aTaoOSw6tAlD3wq9f0AQVbI4DoKWY
+
+### Registrar Falta
+POST http://127.0.0.1:3000/api/disciplina/:disciplinaId/faltas
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUzZmY3NDhiLThjNGMtNDBjOC05ZjM5LWQxMjg0YWU2NzBmMyIsIm5vbWUiOiJqb2FuYSIsImlhdCI6MTc4ODkwOTQ3NywiZXhwIjoxNzg4OTEzMDc3fQ._Ql2SWl5rXG117aTaoOSw6tAlD3wq9f0AQVbI4DoKWY
+
+{
+  "disciplinaId": "0d9fbc50-f3ce-4f11-93f2-bbf9091fdaa3",
+  "quantidade": 1
+}

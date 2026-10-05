@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id          String       @id @default(uuid()) //o @id representa que é chave primaria 
+  nome        String
+  email       String       @unique //di que não pode existir 2 pessoas com o mesmo email
+  senhaHash   String
+  disciplinas Disciplina[] //significa varias disciplinas
+}
+
+model Disciplina {
+  id           String   @id @default(uuid())
+  nomeDisciplina         String
+  totalAulas   Int      // Nova coluna
+  limiteFaltas Int      // Agora será calculado automaticamente
+  usuarioId    String
+  usuario      Usuario  @relation(fields: [usuarioId], references: [id]) //faz a relação entre a tabela do usuario e a tabela de agora
+  faltas       Falta[] 
+}
+
+model Falta {
+  id           String     @id @default(uuid())
+  data         DateTime   @default(now())
+  quantidade   Int
+  disciplinaId String
+  disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
+}
