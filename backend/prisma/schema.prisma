@@ -13,6 +13,7 @@ model Usuario {
   email       String       @unique //di que não pode existir 2 pessoas com o mesmo email
   senhaHash   String
   disciplinas Disciplina[] //significa varias disciplinas
+  resetSenha  ResetSenha[]
 }
 
 model Disciplina {
@@ -31,4 +32,13 @@ model Falta {
   quantidade   Int
   disciplinaId String
   disciplina   Disciplina @relation(fields: [disciplinaId], references: [id], onDelete: Cascade)
+}
+
+model ResetSenha {
+  id           String    @id @default(uuid())
+  token        String    @unique
+  horarioExpirado        DateTime
+  horarioCriacao         DateTime @default(now())
+  usuarioId    String
+  usuario      Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
 }

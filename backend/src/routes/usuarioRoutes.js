@@ -11,11 +11,16 @@ router.post('/cadastrar',
     usuarioController.cadastrar
 )
 
-router.post('/esqueceuSenha', 
-    usuarioController.login
+router.post('/esqueceuSenha',
+    usuarioController.requestReset
 )
 
-router.put('/logout', 
+router.post('/resetarSenha/:token',
+    usuarioController.recuperarSenha
+
+)
+
+router.put('/logout',
     usuarioController.login
 )
 

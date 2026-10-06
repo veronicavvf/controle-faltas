@@ -111,6 +111,20 @@ export default function Auth() {
               className="w-full px-4 py-2 bg-zinc-50 border border-zinc-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-zinc-800 focus:border-transparent transition-all"
               placeholder="••••••••"
             />
+            
+            {/* O BOTÃO DE ESQUECI A SENHA FOI INSERIDO AQUI */}
+            {isLogin && (
+              <div className="text-right mt-2">
+                <button
+                  type="button"
+                  onClick={() => navigate('/recuperar-senha')}
+                  className="text-xs font-medium text-zinc-500 hover:text-zinc-800 transition-colors"
+                >
+                  Esqueci a minha senha
+                </button>
+              </div>
+            )}
+            {/* FIM DA MODIFICAÇÃO */}
           </div>
 
           {/* Novo campo que só aparece no Cadastro */}

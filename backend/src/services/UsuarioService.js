@@ -1,6 +1,8 @@
+const { PrismaClient } = require('@prisma/client')
 const prisma = require('../prisma')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { sendMail } = require('../../config/mailer')
 
 const criarUsuario = async ({ nome, email, senha }) => {
 
@@ -40,9 +42,64 @@ const autenticarUsuario = async ({ email, senha }) => {
   }
 }
 
-const recuperarSenha = async ({email}) => { //para este service usaremos o nodemailer
+const requestReset = async ({email}) => { //para este service usaremos o nodemailer
+  try {
+    
+    const user = await prisma.usuario.findUnique({where: {email}})
+  
+    if (!user) {
+      return res.status(404).json({error: "Não foi encontrado uma conta com esse email"})
+    }
+  
+    const token = crypto.randomBytes(32).toString("hex")
+  
+    const horarioExpirado = new Date(Date.now() + 1000 * 60 * 15)
+  
+    await prisma.ResetSenha.create({
+      data: {
+        token: token,
+        usuarioId: user.id,
+        horarioExpirado
+      }
+    })
+  
+    await sendMail(
+      user.email,
+      "Redefinição de Senha",
+      `
+      <h2> Olá, ${user.name} </h2>
+      <p> Você solicitou redefinição de senha. Clique no link abaixo para redefinir: </p>
+      <a href= "http://localhost:${PORT}/api/auth/resetSenha/${token}">
+       Redefinir senha </a>
+       <p> Esse link expira em 15 minutos. </p>
+      `
+    )
+  
+    return res.json({message: "E-mail de redefinição enviado!"})
+  } catch (error) {
+    return res.status(500).json({error: "erro interno do servidor"})
+  }
 
 }
 
-module.exports = { criarUsuario, autenticarUsuario, recuperarSenha }
+const recuperarSenha = async ({novaSenha, token}) => {
+  const resetToken = await prisma.ResetSenha.findUnique({where: {token}})
+  if (!resetToken || resetToken.horarioExpirado < new Date()) {
+    throw new Error('token invalido ou expirado')
+  }
+
+  const hashedPassword = await bcrypt.hash(novaSenha, 10)
+
+   await prisma.usuario.update({
+    where: { id: resetToken.usuarioId },
+    data: { senhaHash: hashedPassword },
+  })
+
+  const removeToken = await prisma.ResetSenha.delete({where: {id:resetToken.id}})
+
+  return removeToken
+
+}
+
+module.exports = { criarUsuario, autenticarUsuario,requestReset,  recuperarSenha }
 
