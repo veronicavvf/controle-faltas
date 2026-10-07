@@ -41,8 +41,7 @@ const requestReset = async (req, res) => {
     const { email } = req.body
     const recuperar = await usuarioService.requestReset({ email })
     res.status(200).json({
-      response: recuperarSenha,
-      message: "senha redefinida com sucesso"
+      response: recuperar,
     })
   } catch (error) {
     res.status(500).json({ erro: 'erro interno' })

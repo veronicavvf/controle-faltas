@@ -2,13 +2,13 @@ const prisma = require('../prisma')
 
 const criarDisciplinas = async ({ nomeDisciplina, totalAulas, percentualMinimo }, usuarioId) => {
     //validar se temos todos os dados de entrada
-    console.log('usuaio', nomeDisciplina, totalAulas, percentualMinimo)
     if (!nomeDisciplina || !totalAulas || !percentualMinimo || !usuarioId) {
-        throw new Error("preencha os campos!")
+        const error = new Error('Preencha todos os campos!')
+        error.statusCode = 400
+        throw error
     }
-    
+
     const limiteFaltas = Math.floor((totalAulas * percentualMinimo) / 100)
-    console.log('limite', limiteFaltas)
 
     const disciplina = await prisma.disciplina.create({
         data: {
@@ -40,9 +40,7 @@ const list = async (usuarioId) => {
 }
 
 
-const apagarDisciplina = async ({disciplinaId}, usuarioId) => {
-    console.log("disciplinaId:", disciplinaId);
-    console.log("usuarioId:", usuarioId);
+const apagarDisciplina = async ({ disciplinaId }, usuarioId) => {
     const disciplina = await prisma.disciplina.findUnique({
         where: {
             id: disciplinaId
@@ -50,15 +48,17 @@ const apagarDisciplina = async ({disciplinaId}, usuarioId) => {
     })
 
     if (!disciplina || disciplina.usuarioId !== usuarioId) {
-        throw new Error('Disciplina não encontrada ou você não tem permissão para deletá-la.');
+        const error = new Error('Disciplina não encontrada ou você não tem autorização para apagar')
+        error.statusCode = 400
+        throw error
     }
 
-     await prisma.disciplina.delete({
+    await prisma.disciplina.delete({
         where: {
             id: disciplinaId
         }
     })
-    return { message: 'Disciplina deletada com sucesso.'}
+    return { message: 'Disciplina deletada com sucesso.' }
 }
 
 module.exports = { criarDisciplinas, list, apagarDisciplina }

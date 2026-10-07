@@ -2,7 +2,9 @@ const prisma = require('../prisma');
 
 const registrarFalta = async ({ disciplinaId, quantidade, usuarioId }) => {
   if (!disciplinaId || !quantidade) {
-    throw new Error('ID da disciplina e quantidade de faltas são obrigatórios.');
+    const error = new Error('ID da disciplina e quantidade de faltas são obrigatórios.')
+    error.statusCode = 400
+    throw error
   }
 
   const disciplina = await prisma.disciplina.findUnique({
@@ -10,7 +12,9 @@ const registrarFalta = async ({ disciplinaId, quantidade, usuarioId }) => {
   });
 
   if (!disciplina || disciplina.usuarioId !== usuarioId) {
-    throw new Error('Disciplina não encontrada ou não pertence a você.');
+    const error = new Error('Disciplina não encontrada ou não pertence a você.')
+    error.statusCode = 404
+    throw error
   }
 
   const novaFalta = await prisma.falta.create({
